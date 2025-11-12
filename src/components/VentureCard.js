@@ -5,7 +5,7 @@ import { useTheme } from '@/context/ThemeContext';
 import { pulseVenture, investInVenture } from '@/lib/sheets';
 import toast from 'react-hot-toast';
 
-export default function VentureCard({ venture, onUpdate }) {
+export default function VentureCard({ venture }) {
   const { user } = useAuth();
   const { theme } = useTheme();
   const [loading, setLoading] = useState(false);
@@ -15,8 +15,7 @@ export default function VentureCard({ venture, onUpdate }) {
     setLoading(true);
     try {
       const updated = await pulseVenture(venture.id);
-      setLocalPulse(updated.pulse);
-      onUpdate && onUpdate(updated);
+      setLocalPulse(updated.pulse || 0);
       toast.success('Pulse amplified!');
     } catch (err) {
       toast.error('Failed to amplify');
@@ -33,11 +32,10 @@ export default function VentureCard({ venture, onUpdate }) {
     
     setLoading(true);
     try {
-      const updated = await investInVenture(venture.id, {
+      await investInVenture(venture.id, {
         name: user.name,
         email: user.email
       });
-      onUpdate && onUpdate(updated);
       toast.success('Investment interest registered!');
     } catch (err) {
       toast.error('Failed to register interest');
@@ -48,59 +46,49 @@ export default function VentureCard({ venture, onUpdate }) {
 
   const getStageColor = () => {
     const colors = {
-      'Ideation': 'linear-gradient(90deg, #f59e0b, #dc2626)',
-      'Validation': 'linear-gradient(90deg, #3b82f6, #8b5cf6)',
-      'Growth': 'linear-gradient(90deg, #10b981, #14b8a6)',
-      'Scale': 'linear-gradient(90deg, #8b5cf6, #ec4899)'
+      'Ideation': 'badge-warning',
+      'Validation': 'badge-info',
+      'Growth': 'badge-success',
+      'Scale': 'badge-primary'
     };
-    return colors[venture.stage] || colors['Ideation'];
+    return colors[venture.stage] || 'badge-primary';
   };
 
   return (
-    <div className={`card fade-in ${theme === 'neon' ? 'neon-glow' : ''}`}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
-        <span style={{
-          padding: '4px 12px',
-          borderRadius: '20px',
-          fontSize: '12px',
-          color: 'white',
-          backgroundImage: getStageColor(),
-          fontWeight: 600
-        }}>
-          {venture.stage}
+    <div className={`card card-hover ${theme === 'neon' ? 'neon-border neon-glow' : ''}`}>
+
+      <div className="flex-between mb-4">
+        <span className={`badge ${getStageColor()}`}>
+          {venture.stage || 'Ideation'}
         </span>
-        <span className="theme-text-secondary" style={{ fontSize: '12px' }}>
-          {venture.category}
+        <span className="chip">
+          {venture.category || 'Tech'}
         </span>
       </div>
 
-      <h3 className="gradient-text" style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px' }}>
+      <h3 className="text-2xl font-bold mb-2 gradient-text">
         {venture.name}
       </h3>
       
-      <p className="theme-text-secondary" style={{ marginBottom: '16px' }}>
+
+      <p className="theme-text-secondary mb-4 line-clamp-2">
         {venture.description}
       </p>
 
-      {venture.fundingTarget && (
-        <div style={{ 
-          padding: '8px', 
-          background: 'rgba(var(--accent), 0.1)', 
-          borderRadius: '8px',
-          marginBottom: '16px'
-        }}>
-          <span style={{ fontSize: '14px', fontWeight: 600 }}>
-            Seeking: {venture.fundingTarget}
-          </span>
+
+      {venture.fundingTarget && venture.fundingTarget !== 'Not Seeking' && (
+        <div className="alert alert-info mb-4">
+          <span className="font-semibold">Seeking: {venture.fundingTarget}</span>
         </div>
       )}
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+
+      <div className="flex-between mb-4">
         <div>
-          <div className="theme-accent" style={{ fontSize: '24px', fontWeight: 'bold' }}>
+          <div className="text-3xl font-bold theme-accent">
             {localPulse}
           </div>
-          <div className="theme-text-secondary" style={{ fontSize: '12px' }}>
+          <div className="text-sm theme-text-secondary">
             pulse
           </div>
         </div>
@@ -108,29 +96,33 @@ export default function VentureCard({ venture, onUpdate }) {
         <button 
           onClick={handlePulse}
           disabled={loading}
-          className="btn btn-outline"
-          style={{ padding: '8px 16px', fontSize: '14px' }}
+          className="btn btn-outline btn-sm"
         >
           Amplify
         </button>
       </div>
 
+
+      <div className="divider"></div>
+
+
       <button 
         onClick={handleInvest}
         disabled={loading}
-        className="btn btn-primary"
-        style={{ width: '100%' }}
+        className="btn btn-primary w-full"
       >
         Express Interest
       </button>
 
-      <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid rgb(var(--border))' }}>
-        <span className="theme-text-secondary" style={{ fontSize: '14px' }}>
-          Founded by: 
-        </span>
-        <span style={{ fontSize: '14px', fontWeight: 600, marginLeft: '4px' }}>
-          {venture.founder}
-        </span>
+      <div className="mt-4 pt-4 border-t theme-border">
+        <div className="flex-between">
+          <span className="text-sm theme-text-secondary">
+            Founded by
+          </span>
+          <span className="text-sm font-semibold">
+            {venture.founder || 'Anonymous'}
+          </span>
+        </div>
       </div>
     </div>
   );
