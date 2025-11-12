@@ -72,8 +72,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* Government Schemes */}
       <GovSchemes />
 
       {/* How It Works */}
@@ -109,7 +107,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Neon Grid Effect for Neon Theme */}
       {theme === 'neon' && (
         <div className="fixed inset-0 pointer-events-none opacity-20" 
              style={{
