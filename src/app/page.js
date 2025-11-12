@@ -1,8 +1,8 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useTheme } from '@/context/ThemeContext';
-import GovSchemes from '@/components/GovSchemes';
+import { useTheme } from 'src/context/ThemeContext';
+import GovSchemes from 'src/components/GovSchemes';
 
 export default function HomePage() {
   const { theme } = useTheme();
