@@ -3,72 +3,83 @@
 const schemes = [
   {
     name: 'Startup India',
-    description: 'Tax benefits, easier compliance, IPR fast-tracking',
+    description: 'Tax reliefs, faster IPR, easier compliance for DPIIT-recognized startups.',
     link: 'https://www.startupindia.gov.in',
-    funding: 'Up to ₹10 Cr'
+    funding: 'Up to ₹10 Cr',
+    tag: 'Central'
   },
   {
     name: 'MUDRA Yojana',
-    description: 'Collateral-free loans for micro enterprises',
+    description: 'Collateral-free loans to micro and small businesses across sectors.',
     link: 'https://www.mudra.org.in',
-    funding: 'Up to ₹10 Lakh'
+    funding: 'Up to ₹10 Lakh',
+    tag: 'MSME'
   },
   {
     name: 'Atal Innovation Mission',
-    description: 'Incubation support and mentorship',
+    description: 'Incubation, mentorship, and grants through the national innovation network.',
     link: 'https://aim.gov.in',
-    funding: 'Grant up to ₹10 Cr'
+    funding: 'Grant up to ₹10 Cr',
+    tag: 'Innovation'
   },
   {
     name: 'SAMRIDH Scheme',
-    description: 'Accelerator for product startups',
-    link: 'https://samridh.in',
-    funding: 'Up to ₹40 Lakh'
+    description: 'Accelerator support for product startups with matched funding.',
+    link: 'https://samridh.gov.in',
+    funding: 'Up to ₹40 Lakh',
+    tag: 'Accelerator'
   },
   {
     name: 'ASPIRE',
-    description: 'Rural entrepreneurship and agri-business',
+    description: 'Support for rural entrepreneurship and agri-business incubation.',
     link: 'https://aspire.msme.gov.in',
-    funding: 'Up to ₹1 Cr'
+    funding: 'Up to ₹1 Cr',
+    tag: 'Rural'
   },
   {
     name: 'Stand-Up India',
-    description: 'For women and SC/ST entrepreneurs',
+    description: 'Loans for women and SC/ST entrepreneurs for greenfield enterprises.',
     link: 'https://www.standupmitra.in',
-    funding: '₹10 Lakh to ₹1 Cr'
+    funding: '₹10 Lakh – ₹1 Cr',
+    tag: 'Inclusion'
   }
 ];
 
 export default function GovSchemes() {
   return (
-    <section className="py-20">
+    <section className="schemes">
       <div className="container-main">
-        <h2 className="text-4xl font-bold mb-12 text-center">
-          Government Support Programmes
-        </h2>
-        
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {schemes.map((scheme, idx) => (
-            <div key={idx} className="scheme-card">
-              <h3 className="text-xl font-bold mb-2 theme-accent">
-                {scheme.name}
-              </h3>
-              <p className="theme-text-secondary mb-4 text-sm">
-                {scheme.description}
-              </p>
-              <div className="flex justify-between items-center">
-                <span className="font-semibold text-sm">
-                  {scheme.funding}
-                </span>
-                <a 
-                  href={scheme.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm theme-accent hover:underline"
-                >
-                  Learn More →
-                </a>
+        <div className="schemes-header">
+          <h2 className="schemes-title gradient-text">Government Programmes</h2>
+          <p className="schemes-sub">Curated support to build, launch, and scale with India’s policy backbone</p>
+        </div>
+
+        <div className="scheme-grid">
+          {schemes.map((s, i) => (
+            <div key={i} className="scheme-card hover-target">
+              <div className="scheme-head">
+                <div className="scheme-brand">
+                  <div className="scheme-icon">{s.name.slice(0,1)}</div>
+                  <div className="scheme-name">{s.name}</div>
+                </div>
+                <span className="scheme-pill">{s.tag}</span>
               </div>
+
+              <div className="scheme-body">{s.description}</div>
+              <div className="scheme-rows">
+                <div className="scheme-row">
+                  <span>Support</span>
+                  <b>{s.funding}</b>
+                </div>
+              </div>
+
+              <div className="scheme-divider" />
+              <div className="scheme-meta">
+                <div className="scheme-amount">{s.funding}</div>
+                <a href={s.link} target="_blank" rel="noreferrer" className="scheme-cta">Learn More</a>
+              </div>
+
+              <div className="scheme-hover" />
             </div>
           ))}
         </div>
