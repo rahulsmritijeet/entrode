@@ -1,41 +1,21 @@
 'use client';
 import Link from 'next/link';
-import { useAuth } from '@/context/AuthContext';
+import { usePathname } from 'next/navigation';
 import ThemeToggle from './ThemeToggle';
 
 export default function Navigation() {
-  const { user, logout } = useAuth();
+  const pathname = usePathname();
+  const active = (p) => pathname === p;
 
   return (
-    <nav className="glass sticky top-0 z-50 border-b theme-border">
-      <div className="container-main h-16 flex items-center justify-between">
-        <Link href="/" className="text-2xl font-bold gradient-text">
-          ENTRODE
-        </Link>
-        
-        <div className="flex items-center gap-4">
-          <Link href="/explore" className="theme-text hover:theme-accent transition-colors">
-            Explore
-          </Link>
-          
-          {user ? (
-            <>
-              <Link href="/profile" className="theme-text hover:theme-accent transition-colors">
-                Profile
-              </Link>
-              <Link href="/create" className="btn btn-primary">
-                Launch Startup
-              </Link>
-              <button onClick={logout} className="theme-text-secondary hover:theme-text transition-colors">
-                Logout
-              </button>
-            </>
-          ) : (
-            <Link href="/auth" className="btn btn-outline">
-              Sign In
-            </Link>
-          )}
-          
+    <nav className="navbar">
+      <div className="container-main nav-row">
+        <Link href="/" className="brand">ENTRODE</Link>
+        <div className="nav-links">
+          <Link href="/explore" className={`nav-link ${active('/explore') ? 'active' : ''}`}>Explore</Link>
+          <Link href="/create" className={`nav-link ${active('/create') ? 'active' : ''}`}>Create</Link>
+          <Link href="/profile" className={`nav-link ${active('/profile') ? 'active' : ''}`}>Profile</Link>
+          <Link href="/auth" className="nav-cta">Sign In</Link>
           <ThemeToggle />
         </div>
       </div>
