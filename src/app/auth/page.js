@@ -17,13 +17,13 @@ export default function AuthPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     if (isSignUp) {
       if (!formData.name || !formData.email || !formData.password || !formData.phone) {
         toast.error('Please fill all fields');
         return;
       }
-      
+
       const userData = {
         id: `user_${Date.now()}`,
         name: formData.name,
@@ -31,7 +31,7 @@ export default function AuthPage() {
         phone: formData.phone,
         createdAt: new Date().toISOString()
       };
-      
+
       login(userData);
       toast.success('Account created successfully!');
       router.push('/profile');
@@ -40,14 +40,14 @@ export default function AuthPage() {
         toast.error('Please enter email and password');
         return;
       }
-      
+
       const userData = {
         id: `user_${Date.now()}`,
         email: formData.email,
         name: formData.email.split('@')[0],
         createdAt: new Date().toISOString()
       };
-      
+
       login(userData);
       toast.success('Logged in successfully!');
       router.push('/profile');
@@ -127,7 +127,7 @@ export default function AuthPage() {
           </button>
         </form>
 
-        <div className="text-center mt-6">
+        <div className="auth-switch">
           <span className="theme-text-secondary">
             {isSignUp ? 'Already have an account?' : "Don't have an account?"}
           </span>
