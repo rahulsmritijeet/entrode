@@ -1,128 +1,73 @@
 'use client';
 import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { useTheme } from '@/context/ThemeContext';
 import { pulseVenture, investInVenture } from '@/lib/sheets';
-import toast from 'react-hot-toast';
 
 export default function VentureCard({ venture }) {
   const { user } = useAuth();
-  const { theme } = useTheme();
-  const [loading, setLoading] = useState(false);
-  const [localPulse, setLocalPulse] = useState(venture.pulse || 0);
+  const [pulse, setPulse] = useState(venture.pulse || 0);
+  const [busy, setBusy] = useState(false);
 
-  const handlePulse = async () => {
-    setLoading(true);
+  const stageClass = () => {
+    const s = (venture.stage || '').toLowerCase();
+    if (s.includes('idea')) return 'badge badge-idea';
+    if (s.includes('valid')) return 'badge badge-validate';
+    if (s.includes('growth')) return 'badge badge-growth';
+    if (s.includes('scale')) return 'badge badge-scale';
+    return 'badge badge-idea';
+    };
+
+  const onPulse = async () => {
+    if (busy) return;
+    setBusy(true);
     try {
       const updated = await pulseVenture(venture.id);
-      setLocalPulse(updated.pulse || 0);
-      toast.success('Pulse amplified!');
-    } catch (err) {
-      toast.error('Failed to amplify');
-    } finally {
-      setLoading(false);
-    }
+      setPulse(updated.pulse || 0);
+    } finally { setBusy(false); }
   };
 
-  const handleInvest = async () => {
-    if (!user) {
-      toast.error('Please sign in to invest');
-      return;
-    }
-    
-    setLoading(true);
+  const onInvest = async () => {
+    if (!user) return;
+    if (busy) return;
+    setBusy(true);
     try {
-      await investInVenture(venture.id, {
-        name: user.name,
-        email: user.email
-      });
-      toast.success('Investment interest registered!');
-    } catch (err) {
-      toast.error('Failed to register interest');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getStageColor = () => {
-    const colors = {
-      'Ideation': 'badge-warning',
-      'Validation': 'badge-info',
-      'Growth': 'badge-success',
-      'Scale': 'badge-primary'
-    };
-    return colors[venture.stage] || 'badge-primary';
+      await investInVenture(venture.id, { name: user.name, email: user.email });
+    } finally { setBusy(false); }
   };
 
   return (
-    <div className={`card card-hover ${theme === 'neon' ? 'neon-border neon-glow' : ''}`}>
-
-      <div className="flex-between mb-4">
-        <span className={`badge ${getStageColor()}`}>
-          {venture.stage || 'Ideation'}
-        </span>
-        <span className="chip">
-          {venture.category || 'Tech'}
-        </span>
+    <div className="tile">
+      <div className="tile-head">
+        <span className={stageClass()}>{venture.stage || 'Ideation'}</span>
+        <span className="pill">{venture.category || 'Tech'}</span>
       </div>
-
-      <h3 className="text-2xl font-bold mb-2 gradient-text">
+      <div className="mb-2" style={{ fontWeight: 900, fontSize: 22, letterSpacing: '-.01em' }}>
         {venture.name}
-      </h3>
-      
-
-      <p className="theme-text-secondary mb-4 line-clamp-2">
+      </div>
+      <div className="mb-4" style={{ color: 'var(--ink2)' }}>
         {venture.description}
-      </p>
-
-
+      </div>
       {venture.fundingTarget && venture.fundingTarget !== 'Not Seeking' && (
-        <div className="alert alert-info mb-4">
-          <span className="font-semibold">Seeking: {venture.fundingTarget}</span>
+        <div className="mb-4" style={{ fontWeight: 700 }}>
+          Seeking: {venture.fundingTarget}
         </div>
       )}
-
-
-      <div className="flex-between mb-4">
+      <div className="action-row">
         <div>
-          <div className="text-3xl font-bold theme-accent">
-            {localPulse}
-          </div>
-          <div className="text-sm theme-text-secondary">
-            pulse
-          </div>
+          <div className="pulse">{pulse}</div>
+          <div style={{ color: 'var(--ink3)', fontSize: 12 }}>pulse</div>
         </div>
-        
-        <button 
-          onClick={handlePulse}
-          disabled={loading}
-          className="btn btn-outline btn-sm"
-        >
-          Amplify
-        </button>
+        <div style={{ display: 'flex', gap: 10 }}>
+          <button onClick={onPulse} disabled={busy} className="btn btn-outline">Amplify</button>
+          <button onClick={onInvest} disabled={busy || !user} className="btn btn-primary">
+            {user ? 'Express Interest' : 'Sign In'}
+          </button>
+        </div>
       </div>
-
-
-      <div className="divider"></div>
-
-
-      <button 
-        onClick={handleInvest}
-        disabled={loading}
-        className="btn btn-primary w-full"
-      >
-        Express Interest
-      </button>
-
-      <div className="mt-4 pt-4 border-t theme-border">
-        <div className="flex-between">
-          <span className="text-sm theme-text-secondary">
-            Founded by
-          </span>
-          <span className="text-sm font-semibold">
-            {venture.founder || 'Anonymous'}
-          </span>
-        </div>
+      <div className="divider" />
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14 }}>
+        <span style={{ color: 'var(--ink3)' }}>Founder</span>
+        <span style={{ fontWeight: 700 }}>{venture.founder || '—'}</span>
       </div>
     </div>
   );
