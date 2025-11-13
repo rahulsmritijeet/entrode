@@ -1025,3 +1025,62 @@ body {
 .m-theme{padding:10px 0;border-top:1px dashed var(--border);border-bottom:1px dashed var(--border);margin:8px 0;display:flex;justify-content:center}
 .m-cta-primary{display:inline-flex;align-items:center;justify-content:center;padding:12px 18px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-weight:800;text-decoration:none}
 .m-cta-secondary{display:inline-flex;align-items:center;justify-content:center;padding:12px 18px;border-radius:12px;border:2px solid var(--border);color:var(--ink);font-weight:800;text-decoration:none}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.nav-logout{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:10px 16px;border-radius:12px;border:2px solid var(--accent);
+  color:var(--accent);background:transparent;font-weight:800;
+  transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease,color .2s ease
+}
+.nav-logout:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.nav-logout:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:12px}
+[data-theme=dark] .nav-logout{border-color:var(--accent);color:var(--accent)}
+[data-theme=neon] .nav-logout{
+  border-color:#00ffff;color:#00ffff;text-shadow:0 0 10px rgba(0,255,255,.45)
+}
+[data-theme=neon] .nav-logout:hover{box-shadow:0 0 20px rgba(0,255,255,.25)}
+button.nav-link{background:transparent;border:none;padding:0}
+
+.m-logout{
+  display:inline-flex;align-items:center;justify-content:center;width:100%;
+  padding:12px 18px;border-radius:12px;border:2px solid var(--accent);
+  color:var(--accent);background:transparent;font-weight:800;text-decoration:none;
+  transition:transform .2s ease,box-shadow .2s ease,background .2s ease,border-color .2s ease,color .2s ease
+}
+.m-logout:hover{transform:translateY(-2px);background:rgba(99,102,241,.08)}
+.m-logout:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:12px}
+[data-theme=dark] .m-logout{border-color:var(--accent);color:var(--accent)}
+[data-theme=neon] .m-logout{
+  border-color:#00ffff;color:#00ffff;box-shadow:0 0 16px rgba(0,255,255,.25)
+}
+[data-theme=neon] .m-logout:hover{background:rgba(0,255,255,.08)}
