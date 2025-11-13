@@ -21,39 +21,46 @@ export default function Navigation() {
     <>
       <nav className="navbar">
         <div className="container-main nav-row">
-          <Link href="/" className="brand">ENTRODE</Link>
+          <div className="nav-left hide-mobile">
+            <Link href="/" className="brand">ENTRODE</Link>
+            <div className="nav-links-left">
+              <Link href="/explore" className={`nav-link ${isActive('/explore') ? 'active' : ''}`}>Explore</Link>
+              <Link href="/create" className={`nav-link ${isActive('/create') ? 'active' : ''}`}>Create</Link>
+              <Link href="/profile" className={`nav-link ${isActive('/profile') ? 'active' : ''}`}>Profile</Link>
+            </div>
+          </div>
 
-          <div className="nav-links hide-mobile">
-            <Link href="/explore" className={`nav-link ${isActive('/explore') ? 'active' : ''}`}>Explore</Link>
-            <Link href="/create" className={`nav-link ${isActive('/create') ? 'active' : ''}`}>Create</Link>
-            <Link href="/profile" className={`nav-link ${isActive('/profile') ? 'active' : ''}`}>Profile</Link>
-
+          <div className="nav-right hide-mobile">
             {user ? (
-              <div className="nav-auth">
+              <>
                 <Link href="/create" className="nav-cta">Launch</Link>
                 <button onClick={logout} className="nav-logout">Logout</button>
                 <ThemeToggle />
-              </div>
+              </>
             ) : (
-              <div className="nav-auth">
+              <>
                 <Link href="/auth" className="nav-ghost">Sign In</Link>
                 <Link href="/auth?mode=signup" className="nav-cta">Sign Up</Link>
                 <ThemeToggle />
-              </div>
+              </>
             )}
           </div>
 
-          <button
-            aria-label="Menu"
-            className={`ham-btn show-mobile ${open ? 'active' : ''}`}
-            onClick={() => setOpen(!open)}
-          >
-            <span className="ham-inner">
-              <span className="ham-line"></span>
-              <span className="ham-line"></span>
-              <span className="ham-line"></span>
-            </span>
-          </button>
+          <div className="show-mobile" style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
+            <Link href="/" className="brand">ENTRODE</Link>
+            <button
+              aria-label="Menu"
+              className={`ham-btn ${open ? 'active' : ''}`}
+              onClick={() => setOpen(!open)}
+              style={{ marginLeft: 'auto' }}
+            >
+              <span className="ham-inner">
+                <span className="ham-line"></span>
+                <span className="ham-line"></span>
+                <span className="ham-line"></span>
+              </span>
+            </button>
+          </div>
         </div>
       </nav>
 
