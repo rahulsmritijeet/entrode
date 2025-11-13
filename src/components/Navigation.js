@@ -27,15 +27,20 @@ export default function Navigation() {
             <Link href="/explore" className={`nav-link ${isActive('/explore') ? 'active' : ''}`}>Explore</Link>
             <Link href="/create" className={`nav-link ${isActive('/create') ? 'active' : ''}`}>Create</Link>
             <Link href="/profile" className={`nav-link ${isActive('/profile') ? 'active' : ''}`}>Profile</Link>
+
             {user ? (
-              <>
+              <div className="nav-auth">
                 <Link href="/create" className="nav-cta">Launch</Link>
-                <button onClick={logout} className="nav-link">Logout</button>
-              </>
+                <button onClick={logout} className="nav-logout">Logout</button>
+                <ThemeToggle />
+              </div>
             ) : (
-              <Link href="/auth" className="nav-cta">Sign In</Link>
+              <div className="nav-auth">
+                <Link href="/auth" className="nav-ghost">Sign In</Link>
+                <Link href="/auth?mode=signup" className="nav-cta">Sign Up</Link>
+                <ThemeToggle />
+              </div>
             )}
-            <ThemeToggle />
           </div>
 
           <button
@@ -71,31 +76,22 @@ export default function Navigation() {
         </div>
 
         <div className="m-body">
-          <Link href="/explore" className="m-link" onClick={close}>
-            Explore
-          </Link>
-          <Link href="/create" className="m-link" onClick={close}>
-            Create
-          </Link>
-          <Link href="/profile" className="m-link" onClick={close}>
-            Profile
-          </Link>
-
-          <div className="m-theme">
-            <ThemeToggle />
-          </div>
+          <Link href="/explore" className="m-link" onClick={close}>Explore</Link>
+          <Link href="/create" className="m-link" onClick={close}>Create</Link>
+          <Link href="/profile" className="m-link" onClick={close}>Profile</Link>
+          <div className="m-theme"><ThemeToggle /></div>
         </div>
 
         <div className="m-actions">
           {user ? (
             <>
               <Link href="/create" className="m-cta-primary" onClick={close}>Launch</Link>
-              <button className="m-cta-secondary" onClick={() => { logout(); close(); }}>Logout</button>
+              <button className="m-logout" onClick={() => { logout(); close(); }}>Logout</button>
             </>
           ) : (
             <>
-              <Link href="/auth" className="m-cta-primary" onClick={close}>Sign In</Link>
-              <Link href="/auth" className="m-cta-secondary" onClick={close}>Sign Up</Link>
+              <Link href="/auth" className="m-cta-secondary" onClick={close}>Sign In</Link>
+              <Link href="/auth?mode=signup" className="m-cta-primary" onClick={close}>Sign Up</Link>
             </>
           )}
         </div>
