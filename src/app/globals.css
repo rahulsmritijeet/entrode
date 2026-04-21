@@ -1527,3 +1527,68 @@ media (max-width: 768px) {
     gap: 10px
   }
 }
+
+/* ===== Bottom Nav ===== */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: var(--glass);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 100;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.bn-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+  padding: 8px 0;
+  text-decoration: none;
+  color: var(--ink3);
+  font-weight: 600;
+  font-size: 11px;
+  transition: color .2s ease, transform .2s ease;
+}
+.bn-icon { font-size: 20px; }
+.bn-item.active { color: var(--accent); }
+.bn-item.active .bn-icon { transform: scale(1.1); }
+[data-theme=neon] .bn-item.active {
+  color: #00ffff;
+  text-shadow: 0 0 10px rgba(0,255,255,.45);
+}
+
+/* ===== Compact hero (home) ===== */
+.hero-compact {
+  padding: 80px 0 40px;
+  text-align: center;
+  background: linear-gradient(135deg, rgba(99,102,241,.08), transparent 45%, transparent 55%, rgba(168,85,247,.08));
+}
+.hero-compact .title-hero { margin: 0 auto; }
+
+/* ===== Gradient & neon text ===== */
+.gradient-text {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.neon-text {
+  color: #00ffff;
+  text-shadow: 0 0 20px rgba(0,255,255,.6), 0 0 40px rgba(255,0,255,.35);
+}
+
+.w-full { width: 100%; }
+.space-y-4 > * + * { margin-top: 16px; }
+
+@media (max-width: 640px) {
+  .grid.md\:grid-cols-2 { grid-template-columns: 1fr !important; }
+}
