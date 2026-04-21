@@ -1,4 +1,4 @@
-const SCRIPT_URL = process.env.script.google.com/macros/s/AKfycbzHVJi8jk4y-KV2ZF7omqZVcF1dMUPJYUQ-yoaYwq_BUes2C6asKfuNlBpkPaNmkOKu/exec;
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzHVJi8jk4y-KV2ZF7omqZVcF1dMUPJYUQ-yoaYwq_BUes2C6asKfuNlBpkPaNmkOKu/exec';
 
 async function get(params) {
   const url = new URL(SCRIPT_URL);
