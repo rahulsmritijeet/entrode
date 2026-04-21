@@ -1,75 +1,69 @@
-const SHEET_API = process.env.NEXT_PUBLIC_SHEET_API || 'YOUR_GOOGLE_APPS_SCRIPT_URL';
+const SCRIPT_URL = process.env.script.google.com/macros/s/AKfycbzHVJi8jk4y-KV2ZF7omqZVcF1dMUPJYUQ-yoaYwq_BUes2C6asKfuNlBpkPaNmkOKu/exec;
 
+async function get(params) {
+  const url = new URL(SCRIPT_URL);
+  Object.keys(params).forEach(k => url.searchParams.append(k, params[k]));
+  const res = await fetch(url.toString());
+  return res.json();
+}
+
+async function post(body) {
+  const res = await fetch(SCRIPT_URL, {
+    method: 'POST',
+    body: JSON.stringify(body),
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+  });
+  return res.json();
+}
+
+// ===== Ventures =====
 export async function fetchVentures() {
-  try {
-    const response = await fetch(`${SHEET_API}?action=getAll`);
-    const data = await response.json();
-    return data.ventures || [];
-  } catch (error) {
-    console.error('Failed to fetch ventures:', error);
-    return [];
-  }
+  const data = await get({ action: 'getAllVentures' });
+  return data.ventures || [];
 }
 
-export async function createVenture(ventureData) {
-  try {
-    const response = await fetch(SHEET_API, {
-      method: 'POST',
-      body: JSON.stringify({
-        action: 'create',
-        venture: ventureData
-      })
-    });
-    const data = await response.json();
-    return data.venture;
-  } catch (error) {
-    console.error('Failed to create venture:', error);
-    throw error;
-  }
+export async function fetchFeed(userId) {
+  const data = await get({ action: 'getFeed', userId: userId || '' });
+  return data.ventures || [];
 }
 
-export async function pulseVenture(id) {
-  try {
-    const response = await fetch(SHEET_API, {
-      method: 'POST',
-      body: JSON.stringify({
-        action: 'pulse',
-        id: id
-      })
-    });
-    const data = await response.json();
-    return data.venture;
-  } catch (error) {
-    console.error('Failed to pulse venture:', error);
-    throw error;
-  }
+export async function fetchVenture(id) {
+  const data = await get({ action: 'getVenture', id });
+  return data.venture;
 }
 
-export async function investInVenture(id, investor) {
-  try {
-    const response = await fetch(SHEET_API, {
-      method: 'POST',
-      body: JSON.stringify({
-        action: 'invest',
-        id: id,
-        investor: investor
-      })
-    });
-    const data = await response.json();
-    return data.venture;
-  } catch (error) {
-    console.error('Failed to invest:', error);
-    throw error;
-  }
+export async function createVenture(venture) {
+  return post({ action: 'createVenture', venture });
 }
 
-export async function getVenture(id) {
-  try {
-    const response = await fetch(`${SHEET_API}?action=getOne&id=${id}`);
-    const data = await response.json();
-    return data.venture;
-  } catch (error) {
-    console.error('Failed to get venture:', error);
-    return null;
-  }
+export async function updateVenture(id, updates) {
+  return post({ action: 'updateVenture', id, updates });
+}
+
+// ===== Users =====
+export async function fetchUsers() {
+  const data = await get({ action: 'getAllUsers' });
+  return data.users || [];
+}
+
+export async function fetchUser(id) {
+  const data = await get({ action: 'getUser', id });
+  return data.user;
+}
+
+export async function fetchUserByEmail(email) {
+  const data = await get({ action: 'getUserByEmail', email });
+  return data.user;
+}
+
+export async function createUserRecord(user) {
+  return post({ action: 'createUser', user });
+}
+
+export async function updateUserRecord(id, updates) {
+  return post({ action: 'updateUser', id, updates });
+}
+
+export async function toggleFavorite(userId, targetId, targetType) {
+  return post({ action: 'toggleFavorite', userId, targetId, targetType });
 }
