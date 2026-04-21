@@ -1,5 +1,6 @@
 'use client';
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { fetchUserByEmail, createUserRecord, updateUserRecord } from '@/lib/sheets';
 
 const AuthContext = createContext();
 
@@ -8,31 +9,56 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const savedUser = localStorage.getItem('entrode-user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
+    const stored = localStorage.getItem('entrode_user');
+    if (stored) {
+      try { setUser(JSON.parse(stored)); } catch {}
     }
     setLoading(false);
   }, []);
 
-  const login = (userData) => {
-    setUser(userData);
-    localStorage.setItem('entrode-user', JSON.stringify(userData));
+  const persist = (u) => {
+    setUser(u);
+    if (u) localStorage.setItem('entrode_user', JSON.stringify(u));
+    else localStorage.removeItem('entrode_user');
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('entrode-user');
+  const login = async ({ email, name }) => {
+    let u = await fetchUserByEmail(email);
+    if (!u) {
+      const res = await createUserRecord({
+        email,
+        name: name || email.split('@')[0],
+        role: 'Entrepreneur',
+        bio: '',
+        linkedin: '',
+        instagram: '',
+        experience: [],
+        education: [],
+        favoriteStartups: [],
+        favoriteUsers: []
+      });
+      u = res.user;
+    }
+    persist(u);
+    return u;
   };
 
-  const updateUser = (updates) => {
-    const updated = { ...user, ...updates };
-    setUser(updated);
-    localStorage.setItem('entrode-user', JSON.stringify(updated));
+  const logout = () => persist(null);
+
+  const updateUser = async (updates) => {
+    if (!user) return;
+    await updateUserRecord(user.id, updates);
+    persist({ ...user, ...updates });
+  };
+
+  const refreshUser = async () => {
+    if (!user) return;
+    const fresh = await fetchUserByEmail(user.email);
+    if (fresh) persist(fresh);
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, updateUser, loading }}>
+    <AuthContext.Provider value={{ user, loading, login, logout, updateUser, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );
