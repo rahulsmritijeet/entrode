@@ -7,137 +7,59 @@ import toast from 'react-hot-toast';
 export default function AuthPage() {
   const router = useRouter();
   const { login } = useAuth();
-  const [isSignUp, setIsSignUp] = useState(false);
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    name: '',
-    phone: ''
-  });
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-
-    if (isSignUp) {
-      if (!formData.name || !formData.email || !formData.password || !formData.phone) {
-        toast.error('Please fill all fields');
-        return;
-      }
-
-      const userData = {
-        id: `user_${Date.now()}`,
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        createdAt: new Date().toISOString()
-      };
-
-      login(userData);
-      toast.success('Account created successfully!');
+    if (!email) { toast.error('Email required'); return; }
+    setLoading(true);
+    try {
+      await login({ email, name });
+      toast.success('Welcome to Entrode!');
       router.push('/profile');
-    } else {
-      if (!formData.email || !formData.password) {
-        toast.error('Please enter email and password');
-        return;
-      }
-
-      const userData = {
-        id: `user_${Date.now()}`,
-        email: formData.email,
-        name: formData.email.split('@')[0],
-        createdAt: new Date().toISOString()
-      };
-
-      login(userData);
-      toast.success('Logged in successfully!');
-      router.push('/profile');
-    }
-  };
-
-  const updateField = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    } catch {
+      toast.error('Login failed');
+    } finally { setLoading(false); }
   };
 
   return (
-    <div className="min-h-screen theme-bg theme-text flex items-center justify-center py-12">
-      <div className="card" style={{ width: '100%', maxWidth: '440px', margin: '0 24px' }}>
-        <h2 className="text-3xl font-bold mb-8 text-center">
-          {isSignUp ? 'Create Account' : 'Welcome Back'}
-        </h2>
+    <div className="section" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '80vh' }}>
+      <div className="card" style={{ width: '100%', maxWidth: 440 }}>
+        <h2 style={{ fontSize: 28, fontWeight: 900, marginBottom: 8, textAlign: 'center' }}>Welcome to Entrode</h2>
+        <p className="subtitle mb-6">Sign in or create your account</p>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {isSignUp && (
-            <>
-              <div>
-                <label className="block theme-text-secondary text-sm mb-2">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  className="input-field"
-                  value={formData.name}
-                  onChange={(e) => updateField('name', e.target.value)}
-                  placeholder="Enter your name"
-                />
-              </div>
-
-              <div>
-                <label className="block theme-text-secondary text-sm mb-2">
-                  Phone Number
-                </label>
-                <input
-                  type="tel"
-                  className="input-field"
-                  value={formData.phone}
-                  onChange={(e) => updateField('phone', e.target.value)}
-                  placeholder="+91 XXXXX XXXXX"
-                />
-              </div>
-            </>
-          )}
-
-          <div>
-            <label className="block theme-text-secondary text-sm mb-2">
-              Email Address
-            </label>
+        <form onSubmit={submit}>
+          <div style={{ marginBottom: 14 }}>
+            <label className="block theme-text-secondary text-sm mb-2">Email</label>
             <input
               type="email"
               className="input-field"
-              value={formData.email}
-              onChange={(e) => updateField('email', e.target.value)}
+              value={email}
+              onChange={e => setEmail(e.target.value)}
               placeholder="you@example.com"
+              required
             />
           </div>
-
-          <div>
-            <label className="block theme-text-secondary text-sm mb-2">
-              Password
-            </label>
+          <div style={{ marginBottom: 14 }}>
+            <label className="block theme-text-secondary text-sm mb-2">Name <span style={{ color: 'var(--ink3)' }}>(new users)</span></label>
             <input
-              type="password"
+              type="text"
               className="input-field"
-              value={formData.password}
-              onChange={(e) => updateField('password', e.target.value)}
-              placeholder="••••••••"
+              value={name}
+              onChange={e => setName(e.target.value)}
+              placeholder="Your name"
             />
           </div>
-
-          <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '24px' }}>
-            {isSignUp ? 'Create Account' : 'Sign In'}
+          <button type="submit" disabled={loading} className="btn btn-primary w-full">
+            {loading ? 'Please wait...' : 'Continue'}
           </button>
         </form>
 
-        <div className="auth-switch">
-          <span className="theme-text-secondary">
-            {isSignUp ? 'Already have an account?' : "Don't have an account?"}
-          </span>
-          <button
-            onClick={() => setIsSignUp(!isSignUp)}
-            className="theme-accent ml-2 font-semibold hover:underline"
-          >
-            {isSignUp ? 'Sign In' : 'Sign Up'}
-          </button>
-        </div>
+        <p className="subtitle mt-4" style={{ fontSize: 13 }}>
+          Existing email → login. New email → account is created.
+        </p>
       </div>
     </div>
   );
