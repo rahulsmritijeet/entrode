@@ -5,6 +5,7 @@ import Navigation from '@/components/Navigation';
 import BottomNav from '@/components/BottomNav';
 import Cursor from '@/components/Cursor';
 import Script from 'next/script';
+import ChatToggle from '@/components/ChatToggle';
 import './globals.css';
 
 export const metadata = {
