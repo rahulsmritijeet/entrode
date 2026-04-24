@@ -38,6 +38,20 @@ export default function RootLayout({ children }) {
             />
           </ThemeProvider>
         </AuthProvider>
+
+        {/* Chatbase AI Chatbot */}
+        <Script id="chatbase-config" strategy="beforeInteractive">
+          {`
+            window.embeddedChatbotConfig = {
+              chatbotId: "s5os7jr2vy2ah1dj1l9zipc5fk5ydsyr",
+              domain: "www.chatbase.co"
+            }
+          `}
+        </Script>
+        <Script
+          src="https://www.chatbase.co/embed.min.js"
+          strategy="lazyOnload"
+        />
       </body>
     </html>
   );
