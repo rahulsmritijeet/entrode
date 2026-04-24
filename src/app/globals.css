@@ -1630,3 +1630,101 @@ iframe#chatbase-bubble-window {
     bottom: 90px !important;
   }
 }
+/* Hide the bubble button - keep chat always open */
+#chatbase-bubble-button {
+  display: none !important;
+}
+
+/* Always show the chat iframe */
+iframe#chatbase-bubble-window {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  
+  /* Position above BottomNav */
+  position: fixed !important;
+  bottom: 100px !important;
+  right: 20px !important;
+  
+  /* Size */
+  width: 400px !important;
+  height: 600px !important;
+  max-height: calc(100vh - 180px) !important;
+  
+  /* Styling */
+  border-radius: 18px !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: var(--shadow) !important;
+  z-index: 9998 !important;
+}
+
+/* Theme-based shadow */
+[data-theme=light] iframe#chatbase-bubble-window {
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15) !important;
+}
+
+[data-theme=dark] iframe#chatbase-bubble-window {
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme=neon] iframe#chatbase-bubble-window {
+  border-color: rgba(0, 255, 255, 0.3) !important;
+  box-shadow: 0 0 40px rgba(0, 255, 255, 0.3), 0 10px 40px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Mobile - smaller size */
+@media (max-width: 768px) {
+  iframe#chatbase-bubble-window {
+    width: calc(100vw - 32px) !important;
+    height: 500px !important;
+    max-height: calc(100vh - 170px) !important;
+    bottom: 90px !important;
+    right: 16px !important;
+    left: 16px !important;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 480px) {
+  iframe#chatbase-bubble-window {
+    height: 400px !important;
+    max-height: calc(100vh - 150px) !important;
+  }
+}
+
+/* Chat toggle button */
+.chat-toggle-btn {
+  position: fixed;
+  bottom: 720px; /* Above the chat window */
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: white;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  z-index: 9999;
+  transition: transform 0.2s ease;
+}
+
+.chat-toggle-btn:hover {
+  transform: translateY(-2px);
+}
+
+.chat-toggle-btn:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .chat-toggle-btn {
+    bottom: 610px;
+    right: 16px;
+    width: 44px;
+    height: 44px;
+    font-size: 18px;
+  }
+}
